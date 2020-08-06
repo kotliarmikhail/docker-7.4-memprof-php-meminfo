@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+  php-fpm-service:
+    build:
+      context: docker/php-fpm
+    volumes:
+      - ./symfony:/var/www/symfony
+    environment:
+      XDEBUG_CONFIG: "remote_host=172.30.0.1 remote_enable=1 idekey=PHPSTORM remote_port=9001"
+      PHP_IDE_CONFIG: "serverName=Docker"
