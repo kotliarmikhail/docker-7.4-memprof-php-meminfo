@@ -8,3 +8,35 @@ services:
     environment:
       XDEBUG_CONFIG: "remote_host=172.30.0.1 remote_enable=1 idekey=PHPSTORM remote_port=9001"
       PHP_IDE_CONFIG: "serverName=Docker"
+
+  nginx-service:
+      build:
+          context: docker/nginx
+      ports:
+          - 8080:80
+      volumes:
+          - ./logs/nginx/:/var/log/nginx
+      depends_on:
+          - php-fpm-service
+          - db-service
+
+  db-service:
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_DB: api
+      POSTGRES_PASSWORD: api
+      POSTGRES_USER: api
+    volumes:
+      - ./.data/db:/var/lib/postgresql/data
+    ports:
+        - 5432:5432
+
+
+  db-service_test:
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_DB: api_test
+      POSTGRES_PASSWORD: api
+      POSTGRES_USER: api
+    ports:
+        - 5433:5433

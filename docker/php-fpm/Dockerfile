@@ -1,11 +1,17 @@
 FROM php:7.4-fpm
 
-RUN apt-get update && apt-get install -y wget curl git unzip libjudydebian1 libjudy-dev \
+RUN apt-get update && apt-get install -y wget curl git unzip libjudydebian1 libjudy-dev libmcrypt-dev libpq-dev \
     && pecl install xdebug-2.8.1 \
     && docker-php-ext-enable xdebug \ 
     && docker-php-ext-install pcntl \
     && pecl install memprof \
-    && docker-php-ext-enable memprof
+    && docker-php-ext-enable memprof \
+    && pecl install mcrypt-1.0.3 \
+    
+    && docker-php-ext-enable mcrypt \
+    && docker-php-ext-install -j$(nproc) pgsql \
+    && docker-php-ext-install -j$(nproc) pdo_pgsql
+
 
 ENV PHP_INI_DIR /usr/local/etc/php/
 
